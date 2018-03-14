@@ -3,7 +3,7 @@
 
   <head>
     <meta charset="utf-8">
-    <title>{% block title %}{% endblock %}</title>
+    <title>Flask Skeleton{% block title %}{% endblock %}</title>
     <!-- meta -->
     <meta name="description" content="">
     <meta name="author" content="">
@@ -57,7 +57,7 @@
     {% include 'footer.html' %}
 
     <!-- scripts -->
-    <script src="//code.jquery.com/jquery-3.3.1.min.js" type="text/javascript"></script>
+    <script src="//code.jquery.com/jquery-1.11.2.min.js" type="text/javascript"></script>
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js" type="text/javascript"></script>
     <script src="{{url_for('static', filename='main.js')}}" type="text/javascript"></script>
     {% block js %}{% endblock %}

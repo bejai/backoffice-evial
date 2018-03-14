@@ -1,0 +1,35 @@
+{% extends "_base.html" %}
+{% block content %}
+
+<style>
+.zoom {
+    padding: 3px;
+    background-color: #dddddd;
+    transition: transform .2s; /* Animation */
+    width: 166px;
+    height: 126px;
+    margin: 0 auto;
+}
+
+.zoom:hover {
+    transform: scale(2.0); /* (150% zoom - Note: if the zoom is too large, it will go outside of the viewport) */
+}
+</style>
+
+  <h4>Secuencia: <em>{{ fotos[0].secuencia }}</em></h4>
+    <table>    
+    <tr>
+    {% for foto in fotos %}
+
+        <td><div class="zoom"><a href="/static/{{ foto.web_path }}"><img src="/static/{{ foto.web_path }}" alt="{{ foto.secuencia }}" height="{{ h }}" width="{{ w }}"></a></div></td>
+
+	{% if loop.index % 6 == 0 %}
+	    </tr>
+	    <tr>
+	{% endif %}
+
+    {% endfor %}
+    </tr>
+    </table>
+  <h3>This is the members-only page.</h3>
+{% endblock %}

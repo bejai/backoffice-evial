@@ -18,8 +18,9 @@ class DevelopmentConfig(BaseConfig):
     """Development configuration."""
     BCRYPT_LOG_ROUNDS = 4
     WTF_CSRF_ENABLED = False
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///{0}'.format(
-        os.path.join(basedir, 'dev.db'))
+    SQLALCHEMY_DATABASE_URI = 'postgresql://backoffice:milesdavis@localhost/backoffice'
+    #SQLALCHEMY_DATABASE_URI = 'sqlite:///{0}'.format(
+    #    os.path.join(basedir, 'dev.db'))
     DEBUG_TB_ENABLED = True
 
 
@@ -35,6 +36,6 @@ class TestingConfig(BaseConfig):
 
 class ProductionConfig(BaseConfig):
     """Production configuration."""
-    SECRET_KEY = 'my_precious'
-    SQLALCHEMY_DATABASE_URI = 'postgresql://localhost/example'
+    SECRET_KEY = 'milesdavis'
+    SQLALCHEMY_DATABASE_URI = 'postgresql://backoffice:milesdavis@localhost/backoffice'
     DEBUG_TB_ENABLED = False

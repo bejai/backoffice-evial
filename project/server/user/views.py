@@ -60,3 +60,8 @@ def logout():
 @login_required
 def members():
     return render_template('user/members.html')
+
+@user_blueprint.route('/meme')
+@login_required
+def meme():
+    return render_template('user/members.html')

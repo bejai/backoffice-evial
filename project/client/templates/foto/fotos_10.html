@@ -1,0 +1,11 @@
+{% extends "_base.html" %}
+{% block content %}
+  <h3>Welcome, <em>{{ current_user.email }}</em>!</h1>
+
+    {% for foto in fotos %}
+        <li><a href="#">{{ foto.secuencia }} {{foto.order}}</a> 
+	    <img src="/static/{{ foto.web_path }}" alt="Smiley face" height="{{ foto.height }}" width="{{ foto.width }}"></li>
+    {% endfor %}
+
+  <h3>This is the members-only page.</h3>
+{% endblock %}

@@ -1,13 +1,18 @@
 # manage.py
 
-
 import unittest
 
 import coverage
 from flask.cli import FlaskGroup
 
 from project.server import create_app, db
-from project.server.models import User
+from project.server.models import User, Foto, Secuencia
+
+# backoffice project imports
+import datetime
+from os import listdir
+import tarfile
+import shutil
 
 
 app = create_app()
@@ -24,6 +29,7 @@ COV = coverage.coverage(
     ]
 )
 COV.start()
+
 
 @cli.command()
 def create_db():
@@ -43,6 +49,101 @@ def create_admin():
     """Creates the admin user."""
     db.session.add(User(email='ad@min.com', password='admin', admin=True))
     db.session.commit()
+
+
+@cli.command()
+def create_foto_sample():
+    """Creates a foto sample."""
+    db.session.add(Foto(customer_id='BerniLab',
+			radar_id='labb',
+			web_path='fotos/bonzenn',
+			fs_path='/var/wwww',
+			vel_max=30,
+			vel=35,
+			order='004',
+			secuencia='Bernilab-lab-01-01-2018-12-00-00-30-38',
+			registered_on=datetime.datetime.now(),
+			processed=False,
+			reprocess=False))
+    #print dir(db.session)
+    print "commited"
+    db.session.commit()
+
+
+@cli.command()
+def untar_fotos():
+    """Process tar files."""
+
+    tars = listdir('/home/fotos')
+
+    for tar in tars:
+	if tar.split('.')[-1:] <> ['tar']: continue
+	radar_id_parts = tar.split('.')[0].split('-')[:-3]
+	radar_id = '-'.join(radar_id_parts)
+	print tar
+	# open tar file
+	tf = tarfile.open('/home/fotos/%s' % tar,'r')
+
+	for m in tf.getmembers():
+	    if m.name.split('.')[-1:] <> ['jpg']: continue
+	    #print m.name
+    	    frame_name = m.name.split('/')[-1]
+	    parts = frame_name.split('.')[0].split('-')
+	    secuencia = '-'.join(parts[:-3])
+	    day,month,year,hh,mm,ss,vmax,vel,order = parts[-9],parts[-8],parts[-7],parts[-6],parts[-5],parts[-4],parts[-3],parts[-2],parts[-1]
+	    #print frame_name,radar_id,day,month,year,hh,mm,ss,vmax,vel
+	    #exit()
+
+	    short_name =  m.name.split('/')[4:]
+	    m.path = '/home/backoffice/fotos/%s/%s' % (radar_id,'/'.join(short_name))
+	    pure_path = 'fotos/%s/%s' % (radar_id,'/'.join(short_name))
+
+	    # Extraigo el file.jpg modificado...
+	    tf.extract(m)
+	        
+	    # Busco la secuencia a la que pertenece y si no existe la agrego
+	    r = Secuencia.query.filter_by(secuencia=secuencia).first()
+
+	    if r is None:
+		s = Secuencia(customer_id=radar_id, radar_id=radar_id, web_path=pure_path, fs_path=pure_path, vel_max=vmax, vel=vel, secuencia=secuencia, registered_on=datetime.datetime.strptime('%s/%s/%s %s:%s:%s' % (year,month,day,hh,mm,ss), '%Y/%m/%d %H:%M:%S'), processed=False, reprocess=False)
+		db.session.add(s)
+		db.session.flush()
+		#print "ID:: %s" % s.id
+		secuencia_id = s.id
+		print "secuencia commited"
+		db.session.commit()
+
+	    else:
+		secuencia_id = r.id
+
+	    # Busco la foto, si no existe la agrego
+	    f = Foto.query.filter_by(web_path=pure_path).first()
+
+	    if f is None:
+
+		f = Foto(customer_id=radar_id, radar_id=radar_id, secuencia_id = secuencia_id, web_path=pure_path, fs_path=m.path, vel_max=vmax, vel=vel, order=order, secuencia=secuencia,	registered_on=datetime.datetime.strptime('%s/%s/%s %s:%s:%s' % (year,month,day,hh,mm,ss), '%Y/%m/%d %H:%M:%S'), processed=False, reprocess=False)
+		db.session.add(f)
+		print "foto commited"
+		db.session.commit()
+		#exit()
+
+	tf.close()
+
+
+@cli.command()
+def list_fotos():
+    """List fotos."""
+    fotos = db.session.query(Foto).all()
+    for f in fotos:
+	print f.secuencia
+
+
+@cli.command()
+def list_fotos_10():
+    """List fotos."""
+    fotos = db.session.query(Foto).all().limit(10)
+    for f in fotos:
+	print f.secuencia
 
 
 @cli.command()

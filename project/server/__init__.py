@@ -32,7 +32,8 @@ def create_app(script_info=None):
 
     # set config
     app_settings = os.getenv(
-        'APP_SETTINGS', 'project.server.config.DevelopmentConfig')
+#        'APP_SETTINGS', 'project.server.config.DevelopmentConfig')
+        'APP_SETTINGS', 'project.server.config.ProductionConfig')
     app.config.from_object(app_settings)
 
     # set up extensions
@@ -46,8 +47,10 @@ def create_app(script_info=None):
     # register blueprints
     from project.server.user.views import user_blueprint
     from project.server.main.views import main_blueprint
+    from project.server.foto.views import foto_blueprint
     app.register_blueprint(user_blueprint)
     app.register_blueprint(main_blueprint)
+    app.register_blueprint(foto_blueprint)
 
     # flask login
     from project.server.models import User

@@ -1,0 +1,48 @@
+{% extends "_base.html" %}
+{% block css %}
+    <!-- <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='datatables.min.css')}}" > -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" >
+{% endblock %}
+
+{% block content %}
+
+  <h4>Secuencia: <em>Pimba</em></h4>
+
+    <table id="table_id" class="display compact">    
+    <thead>
+    	<tr>
+    	    <th>Radar ID</th>
+    	    <th>Fecha Hora</th>
+    	    <th data-class-name="priority">Vel/Max</th>
+    	    <th>Procesado</th>
+    	</tr>
+    </thead>
+    <tbody>
+
+    {% for sec in secuencias %}
+    
+    <tr>
+    <td>{{ sec.registered_on }}</td>
+    <td>{{ sec.radar_id }}</td>
+    <td>{{ sec.vel }} / {{sec.vel_max}}</td>
+    <td>{{ sec.processed }}</td>
+    </tr>
+    
+    {% endfor %}
+
+    </tbody>
+    </table>
+
+{% endblock %}
+
+{% block js %}
+
+<script type="text/javascript"  src="{{url_for('static', filename='datatables.min.js')}}"></script>
+<script>
+$(document).ready( function () {
+    $('#table_id').DataTable();
+} );
+</script>
+
+{% endblock %}
+
