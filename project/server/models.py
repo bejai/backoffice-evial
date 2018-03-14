@@ -156,7 +156,7 @@ class Customer(db.Model):
     acta_template = db.Column(db.String(255), unique=False, nullable=True) # Path al acta dot
     registered_on = db.Column(db.DateTime, nullable=False)
 
-    def __init__(self, pub_id,nombre,registered_on):
+    def __init__(self, pub_id,nombre,acta,acta_template,registered_on):
         self.pub_id = pub_id
 	self.nombre = nombre
 	self.acta = acta
