@@ -98,7 +98,7 @@ def untar_fotos():
 	    m.path = '/home/backoffice/fotos/%s/%s' % (radar_id,'/'.join(short_name))
 	    pure_path = 'fotos/%s/%s' % (radar_id,'/'.join(short_name))
 
-	    # Extraigo el file.jpg modificado...
+	    # Extraigo el file.jpg modificado..
 	    tf.extract(m)
 	        
 	    # Busco la secuencia a la que pertenece y si no existe la agrego
